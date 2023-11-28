@@ -244,17 +244,28 @@ class MadKD(nn.Module):
     ys_model, yt_model for training the model
     ys_mlp, yt_mlp for training the mlp
     """
-    def __init__(self, hidden_size=256, cls_num=100): 
+    def __init__(self, input_size=100, hidden_size=256, output_size=100): 
         super(MadKD, self).__init__()
+        self.input_size = input_size
         self.hidden_size = hidden_size
-        self.input_size = cls_num
-        self.output_size = cls_num
+        self.output_size = output_size
+        self.num_layers = 0  # 请替换为实际的隐藏层层数
+        self.dropout_rate = 0.5
 
         self.grl = GradientReversalLayer()
-        self.mlp = nn.Sequential(
-            nn.Linear(self.input_size, self.hidden_size),
-        )
-        self.apply(self.weight_init)      
+
+        # 构建Sequential模型
+        layers = [nn.Linear(self.input_size, self.hidden_size)]
+        for _ in range(self.num_layers):
+            layers.extend([
+                nn.Linear(self.hidden_size, self.hidden_size),
+                # nn.ReLU(),
+                # nn.Dropout(self.dropout_rate)
+            ])
+        layers.append(nn.Linear(self.hidden_size, self.output_size))
+
+        self.mlp = nn.Sequential(*layers)
+        self.apply(self.weight_init)
         
     def forward(self, y_s, y_t, lambda_, labels):
         # trans logits only for training the model, only retain the grad of model

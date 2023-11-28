@@ -70,6 +70,7 @@ def parse_option():
     parser.add_argument('-s', '--soft', type=float, default=1.0, help='attention scale of SemCKD')
     parser.add_argument('-r', '--rev_factor', type=float, default=1.0, help='rev_factor of grl for MadKD')
     parser.add_argument('-hs', '--hidden_size', type=int, default=256, help='hidden size of mlp for MadKD')
+    parser.add_argument('-os', '--output_size', type=int, default=100, help='output size of mlp for MadKD')
     parser.add_argument('-fw', '--fwd_weight', type=int, default=1, help='forward weight of model training for MadKD')
     parser.add_argument('-rw', '--rev_weight', type=int, default=1, help='reverse weight of mlp training for MadKD')
     
@@ -300,7 +301,7 @@ def main_worker(gpu, ngpus_per_node, opt):
     elif opt.distill == 'dkd':
         criterion_kd = DKDLoss()
     elif opt.distill == 'madkd':
-        model_madkd = MadKD(hidden_size=opt.hidden_size, cls_num=opt.n_cls)
+        model_madkd = MadKD(input_size=opt.n_cls, hidden_size=opt.hidden_size, output_size=opt.output_size)
         criterion_kd = MadKDLoss(alpha=opt.fwd_weight, beta=opt.rev_weight)
         module_list.append(model_madkd)
         trainable_list.append(model_madkd)

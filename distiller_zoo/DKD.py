@@ -13,7 +13,7 @@ DKD_config  = """
                 """
 
 class DKDLoss(nn.Module):
-    def  __init__(self, alpha = 1, beta = 8, temperature = 4, warmup = 20):
+    def  __init__(self, alpha = 1, beta = 2, temperature = 4, warmup = 20):
         super(DKDLoss, self).__init__()
         self.alpha = alpha
         self.beta = beta

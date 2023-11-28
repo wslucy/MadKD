@@ -185,12 +185,13 @@ def train_distill(epoch, train_loader, module_list, criterion_list, optimizer, o
                   'Acc@5 {top5.avg:.3f}'.format(
                 epoch, idx, n_batch, opt.gpu, loss=losses, top1=top1, top5=top5,
                 batch_time=batch_time))
-            print(epoch, f"loss_cls: {loss_cls}, loss_div: {loss_div}, loss_kd: {loss_kd}, rev_factor: {opt.rev_factor}")
-            torch.save(y_s_model, "y_s_model.pt")
-            torch.save(y_t_model, "y_t_model.pt")
-            torch.save(logit_s, "logit_s.pt")
-            torch.save(logit_t, "logit_t.pt")
-            assert not torch.isnan(loss_kd)
+            if opt.distill == 'madkd':
+                print(epoch, f"loss_cls: {loss_cls}, loss_div: {loss_div}, loss_kd: {loss_kd}, rev_factor: {opt.rev_factor}")
+                torch.save(y_s_model, "y_s_model.pt")
+                torch.save(y_t_model, "y_t_model.pt")
+                torch.save(logit_s, "logit_s.pt")
+                torch.save(logit_t, "logit_t.pt")
+                assert not torch.isnan(loss_kd)
             sys.stdout.flush()
 
     return top1.avg, top5.avg, losses.avg
