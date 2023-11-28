@@ -259,8 +259,8 @@ class MadKD(nn.Module):
         for _ in range(self.num_layers):
             layers.extend([
                 nn.Linear(self.hidden_size, self.hidden_size),
-                # nn.ReLU(),
-                # nn.Dropout(self.dropout_rate)
+                nn.ReLU(),
+                nn.Dropout(self.dropout_rate)
             ])
         layers.append(nn.Linear(self.hidden_size, self.output_size))
 
